@@ -1,6 +1,6 @@
 ﻿namespace RCL.SSL.CertificateBot.Core
 {
-    public interface IFileService
+    internal interface IFileService
     {
         void CreateDirectory(string path);
         int GetNumberFilesInDirectory(string path);

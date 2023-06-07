@@ -1,6 +1,6 @@
 ﻿namespace RCL.SSL.CertificateBot.Core
 {
-    public static class FolderNameHelper
+    internal static class FolderNameHelper
     {
         public static string GetFolderPath(string certificateName, string directoryPath)
         {

@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    public class CertificateBotService : ICertificateBotService
+    internal class CertificateBotService : ICertificateBotService
     {
         private readonly IOptions<CertificateBotOptions> _options;
         private readonly ICertificateService _certificateService;

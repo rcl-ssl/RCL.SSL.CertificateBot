@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    public class IISService : IIISService
+    internal class IISService : IIISService
     {
         public Site GetIISSite(string siteName)
         {
