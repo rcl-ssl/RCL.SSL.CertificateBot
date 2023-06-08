@@ -47,7 +47,6 @@ namespace RCL.SSL.CertificateBot.Core
 
                 if (certificateNames?.Count > 0)
                 {
-
                     List<Certificate> certificates = await GetIncludedCertificatesAsync(certificateNames);
 
                     if (certificates?.Count > 0)
@@ -288,8 +287,6 @@ namespace RCL.SSL.CertificateBot.Core
 
                 if (certsToRenew?.Count > 0)
                 {
-                    
-
                     if (certNames?.Count > 0)
                     {
                         foreach (Certificate cert in certsToRenew)
