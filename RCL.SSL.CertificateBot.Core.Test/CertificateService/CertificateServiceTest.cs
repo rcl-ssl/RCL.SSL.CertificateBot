@@ -55,7 +55,7 @@ namespace RCL.SSL.CertificateBot.Core.Test
             try
             {
                 List<Certificate> certificates = await _certificateService.GetCertificatesToRenewAsync();
-                Assert.AreNotEqual(0, certificates.Count);
+                Assert.AreNotEqual(0, certificates?.Count);
             }
             catch (Exception ex)
             {

@@ -33,7 +33,7 @@ namespace RCL.SSL.CertificateBot.Core.Test
             catch (Exception ex)
             {
                 string err = ex.Message;
-                Assert.AreEqual(1, 0);
+                Assert.Fail();
             }
         }
 
@@ -49,7 +49,7 @@ namespace RCL.SSL.CertificateBot.Core.Test
             catch (Exception ex)
             {
                 string err = ex.Message;
-                Assert.AreEqual(1, 0);
+                Assert.Fail();
             }
         }
 
@@ -63,7 +63,7 @@ namespace RCL.SSL.CertificateBot.Core.Test
             catch(Exception ex)
             {
                 string err = ex.Message;
-                Assert.AreEqual(1, 0);
+                Assert.Fail();
             }
         }
 
