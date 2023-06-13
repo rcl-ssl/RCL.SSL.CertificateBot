@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Microsoft.Extensions.Options;
+using RCL.SSL.CertificateBot.Core.Helpers;
 using RCL.SSL.SDK;
 using System.Security.Cryptography.X509Certificates;
 
@@ -109,7 +110,7 @@ namespace RCL.SSL.CertificateBot.Core
 
             try
             {
-                List<IISBindingInformation> bindings = _options.Value.IISBindings;
+                List<IISBindingInformation> bindings = IISBindingsHelper.GetIISBindings(_options.Value.IISBindings);
                 List<string> certificateNamesSaved = new List<string>();
                 List<Certificate> certificatesSaved = new List<Certificate>();
                 List<string> certificatesProcessed = new List<string>();
@@ -147,11 +148,11 @@ namespace RCL.SSL.CertificateBot.Core
                         }
                     }
 
-                    foreach(var binding in bindings)
+                    foreach (var binding in bindings)
                     {
-                        if(certificateNamesSaved.Contains(binding.certificateName))
+                        if (certificateNamesSaved.Contains(binding.certificateName))
                         {
-                           RemoveIISBinding(binding);
+                            RemoveIISBinding(binding);
 
                             Certificate certificate = certificatesSaved.Where(w => w.certificateName == binding.certificateName).FirstOrDefault();
 
@@ -168,22 +169,29 @@ namespace RCL.SSL.CertificateBot.Core
                     message = $"{message} Did not find any bindngs for IIS. ";
                 }
 
-                List<Certificate> certificatesToRenew = await GetCertificatesToRenewAsync(certificatesProcessed);
-
-                if (certificatesToRenew?.Count > 0)
+                if (certificatesProcessed?.Count > 0)
                 {
-                    message = $"{message} Found {certificatesToRenew?.Count} certificate(s) to renew. ";
+                    List<Certificate> certificatesToRenew = await GetCertificatesToRenewAsync(certificatesProcessed);
 
-                    foreach (Certificate cert in certificatesToRenew)
+                    if (certificatesToRenew?.Count > 0)
                     {
-                        await _certificateService.RenewCertificateAsync(cert);
+                        message = $"{message} Found {certificatesToRenew?.Count} certificate(s) to renew. ";
 
-                        message = $"{message} Scheduled {cert.certificateName} for renewal. ";
+                        foreach (Certificate cert in certificatesToRenew)
+                        {
+                            await _certificateService.RenewCertificateAsync(cert);
+
+                            message = $"{message} Scheduled {cert.certificateName} for renewal. ";
+                        }
+                    }
+                    else
+                    {
+                        message = $"{message} Did not find any certificates to renew. ";
                     }
                 }
                 else
                 {
-                    message = $"{message} Did not find any certificates to renew. ";
+                    message = $"{message} Did not process any certificates. ";
                 }
             }
             catch (Exception ex)

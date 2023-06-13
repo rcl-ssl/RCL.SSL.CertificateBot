@@ -11,7 +11,7 @@ namespace RCL.SSL.CertificateBot.Core
             services.AddTransient<ICertificateService, CertificateService>();
             services.AddTransient<ICertificateBotService, CertificateBotService>();
             services.AddTransient<IIISService, IISService>();
-            services.Configure(setupAction);
+            services.Configure<CertificateBotOptions>(setupAction);
 
             return services;
         }
