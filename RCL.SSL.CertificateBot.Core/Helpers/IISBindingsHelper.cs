@@ -18,6 +18,10 @@
                     {
                         foreach (string str in arr)
                         {
+                            if (str.Contains("siteName"))
+                            {
+                                bindingInformation.siteName = str.Split(':')[1];
+                            }
                             if (str.Contains("ip"))
                             {
                                 bindingInformation.ip = str.Split(':')[1];
@@ -37,7 +41,8 @@
                         }
                     }
 
-                    if(!string.IsNullOrEmpty(bindingInformation?.ip) &&
+                    if(!string.IsNullOrEmpty(bindingInformation?.siteName) &&
+                       !string.IsNullOrEmpty(bindingInformation?.ip) &&
                        !string.IsNullOrEmpty(bindingInformation?.port) &&
                        !string.IsNullOrEmpty(bindingInformation?.host) &&
                        !string.IsNullOrEmpty(bindingInformation?.certificateName))
