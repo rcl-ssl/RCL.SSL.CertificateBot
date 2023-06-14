@@ -9,10 +9,10 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         IConfiguration Configuration = hostContext.Configuration;
 
-        services.Configure<RCLSDKOptions>(Configuration.GetSection("RCLSDK"));
-        services.AddRCLSDKService(options => { } );
-        services.Configure<CertificateBotOptions>(Configuration.GetSection("CertificateBot"));
-        services.AddCertificateBotService(options => { });
+        services.Configure<RCLSDKOptions>(Configuration.GetSection(RCLSDKOptions.RCLSDK));
+        services.Configure<CertificateBotOptions>(Configuration.GetSection(CertificateBotOptions.CertificateBot));
+        services.AddRCLSDKService();
+        services.AddRCLCertificateBotService();
         services.AddHostedService<Worker>();
     })
     .Build();

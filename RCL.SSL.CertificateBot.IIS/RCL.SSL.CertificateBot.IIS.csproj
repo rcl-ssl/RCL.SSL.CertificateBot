@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-RCL.SSL.CertificateBot.IIS-a7f882db-81ca-48ff-bbe8-0005ce5e7da8</UserSecretsId>
+	<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
   </PropertyGroup>
 
   <ItemGroup>

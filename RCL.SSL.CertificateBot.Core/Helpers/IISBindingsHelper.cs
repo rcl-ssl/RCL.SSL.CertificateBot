@@ -6,51 +6,61 @@
         {
             List<IISBindingInformation> bindings = new List<IISBindingInformation>();
 
-            if(IISBindingsList?.Count > 0)
+            try
             {
-                foreach(string binding in IISBindingsList)
+                if (IISBindingsList != null)
                 {
-                    IISBindingInformation bindingInformation = new IISBindingInformation();
-
-                    string[] arr = binding.Split(';');
-
-                    if(arr.Length > 0)
+                    if (IISBindingsList?.Count > 0)
                     {
-                        foreach (string str in arr)
+                        foreach (string binding in IISBindingsList)
                         {
-                            if (str.Contains("siteName"))
+                            IISBindingInformation bindingInformation = new IISBindingInformation();
+
+                            string[] arr = binding.Split(';');
+
+                            if (arr.Length > 0)
                             {
-                                bindingInformation.siteName = str.Split(':')[1];
+                                foreach (string str in arr)
+                                {
+                                    if (str.Contains("siteName"))
+                                    {
+                                        bindingInformation.siteName = str.Split(':')[1];
+                                    }
+                                    if (str.Contains("ip"))
+                                    {
+                                        bindingInformation.ip = str.Split(':')[1];
+                                    }
+                                    if (str.Contains("port"))
+                                    {
+                                        bindingInformation.port = str.Split(':')[1];
+                                    }
+                                    if (str.Contains("host"))
+                                    {
+                                        bindingInformation.host = str.Split(':')[1];
+                                    }
+                                    if (str.Contains("certificateName"))
+                                    {
+                                        bindingInformation.certificateName = str.Split(':')[1];
+                                    }
+                                }
                             }
-                            if (str.Contains("ip"))
+
+                            if (!string.IsNullOrEmpty(bindingInformation?.siteName) &&
+                               !string.IsNullOrEmpty(bindingInformation?.ip) &&
+                               !string.IsNullOrEmpty(bindingInformation?.port) &&
+                               !string.IsNullOrEmpty(bindingInformation?.host) &&
+                               !string.IsNullOrEmpty(bindingInformation?.certificateName))
                             {
-                                bindingInformation.ip = str.Split(':')[1];
+                                bindings.Add(bindingInformation);
                             }
-                            if (str.Contains("port"))
-                            {
-                                bindingInformation.port = str.Split(':')[1];
-                            }
-                            if (str.Contains("host"))
-                            {
-                                bindingInformation.host = str.Split(':')[1];
-                            }
-                            if (str.Contains("certificateName"))
-                            {
-                                bindingInformation.certificateName = str.Split(':')[1];
-                            }
+
                         }
                     }
-
-                    if(!string.IsNullOrEmpty(bindingInformation?.siteName) &&
-                       !string.IsNullOrEmpty(bindingInformation?.ip) &&
-                       !string.IsNullOrEmpty(bindingInformation?.port) &&
-                       !string.IsNullOrEmpty(bindingInformation?.host) &&
-                       !string.IsNullOrEmpty(bindingInformation?.certificateName))
-                    {
-                        bindings.Add(bindingInformation);
-                    }
-
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
             
             return bindings;

@@ -36,7 +36,7 @@ namespace RCL.SSL.CertificateBot.Core.Test
             {
                 Certificate certificate = new Certificate
                 {
-                    certificateName = "store.shopeneur.com"
+                    certificateName = "shopeneur.com"
                 };
 
                 Certificate _certificate = await _certificateService.GetCertificateAsync(certificate);

@@ -28,6 +28,7 @@ namespace RCL.SSL.CertificateBot.Core
         }
 
         public CertificateBotService(IOptions<CertificateBotOptions> options,
+            IOptions<RCLSDKOptions> sdkOptions,
             ICertificateService certificateService,
             IFileService fileService,
             IIISService iIISService)
@@ -110,7 +111,7 @@ namespace RCL.SSL.CertificateBot.Core
 
             try
             {
-                List<IISBindingInformation> bindings = IISBindingsHelper.GetIISBindings(_options.Value.IISBindings);
+                List<IISBindingInformation> bindings = IISBindingsHelper.GetIISBindings(_options?.Value?.IISBindings ?? null);
                 List<string> certificateNamesSaved = new List<string>();
                 List<Certificate> certificatesSaved = new List<Certificate>();
                 List<string> certificatesProcessed = new List<string>();
