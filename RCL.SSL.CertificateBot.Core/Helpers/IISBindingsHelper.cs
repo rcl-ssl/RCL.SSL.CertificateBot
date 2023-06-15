@@ -1,6 +1,6 @@
 ﻿namespace RCL.SSL.CertificateBot.Core.Helpers
 {
-    internal static class IISBindingsHelper
+    public static class IISBindingsHelper
     {
         public static List<IISBindingInformation> GetIISBindings(List<string> IISBindingsList)
         {

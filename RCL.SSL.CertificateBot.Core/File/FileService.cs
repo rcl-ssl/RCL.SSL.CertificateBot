@@ -1,6 +1,6 @@
 ﻿namespace RCL.SSL.CertificateBot.Core
 {
-    internal class FileService : IFileService
+    public class FileService : IFileService
     {
         public void CreateDirectory(string path)
         {

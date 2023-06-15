@@ -4,10 +4,11 @@ using Microsoft.Extensions.Options;
 using RCL.SSL.CertificateBot.Core.Helpers;
 using RCL.SSL.SDK;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    internal class CertificateBotService : ICertificateBotService
+    public class CertificateBotService : ICertificateBotService
     {
         private readonly IOptions<CertificateBotOptions> _options;
         private readonly ICertificateService _certificateService;
@@ -197,7 +198,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception($"{message} {ex.Message}");
+                throw new Exception($"{message} ERROR: {ex.Message}");
             }
 
             return message;

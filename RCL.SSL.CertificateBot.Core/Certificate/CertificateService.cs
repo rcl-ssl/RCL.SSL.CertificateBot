@@ -2,7 +2,7 @@
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    internal class CertificateService : ICertificateService
+    public class CertificateService : ICertificateService
     {
         private readonly ICertificateRequestService _certificateRequestService;
 
