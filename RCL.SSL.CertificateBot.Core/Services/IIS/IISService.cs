@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    public class IISService : IIISService
+    internal class IISService : IIISService
     {
         public Site GetIISSite(string siteName)
         {
@@ -23,7 +23,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not get site : {siteName} from IIS, {ex.Message}");
+                throw new Exception($"ERROR from {this.GetType().Name} : Could not get site : {siteName} from IIS, {ex.Message}");
             }
 
             return null;
@@ -62,7 +62,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not add binding: {bindingInformation} to IIS site: {siteName}, {ex.Message}");
+                throw new Exception($"ERROR from {this.GetType().Name} : Could not add binding: {bindingInformation} to IIS site: {siteName}, {ex.Message}");
             }
         }
 
@@ -94,7 +94,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not remove binding {bindingInformation} from IIS site : {siteName}, {ex.Message}");
+                throw new Exception($"ERROR from {this.GetType().Name} : Could not remove binding {bindingInformation} from IIS site : {siteName}, {ex.Message}");
             }
         }
     }

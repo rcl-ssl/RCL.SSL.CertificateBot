@@ -1,6 +1,6 @@
 ﻿namespace RCL.SSL.CertificateBot.Core
 {
-    public class FileService : IFileService
+    internal class FileService : IFileService
     {
         public void CreateDirectory(string path)
         {
@@ -11,15 +11,15 @@
                     DirectoryInfo di = Directory.CreateDirectory(path);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception($"Could not create a directory, {ex.Message}");
+                throw new Exception($"ERROR from {this.GetType().Name} : Could not create a directory, {ex.Message}");
             }
         }
 
         public int GetNumberFilesInDirectory(string path)
         {
-            if(!Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
                 return 0;
             }
@@ -44,7 +44,7 @@
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not save a file, {ex.Message}");
+                throw new Exception($"ERROR from {this.GetType().Name} : Could not save a file, {ex.Message}");
             }
         }
 
@@ -57,9 +57,9 @@
                     SaveFile(fileName, path, stream);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception($"Could not write text to file, : {ex.Message}");
+                throw new Exception($"ERROR from {this.GetType().Name} : Could not write text to file, : {ex.Message}");
             }
         }
 

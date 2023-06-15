@@ -2,7 +2,7 @@
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    public interface ICertificateService
+    internal interface ICertificateService
     {
         Task GetTestAsync();
         Task<Certificate> GetCertificateAsync(Certificate certificate);

@@ -15,7 +15,7 @@ namespace RCL.SSL.CertificateBot.Core.Test
             IServiceCollection services = new ServiceCollection();
 
             services.AddRCLSDKService(options => configuration.Bind("RCLSDK", options));
-            services.AddCertificateBotService(options => configuration.Bind("CertificateBot",options));
+            services.AddRCLCertificateBotService(options => configuration.Bind("CertificateBot",options));
 
             return services.BuildServiceProvider();
         }

@@ -1,14 +1,12 @@
 ﻿#nullable disable
 
 using Microsoft.Extensions.Options;
-using RCL.SSL.CertificateBot.Core.Helpers;
 using RCL.SSL.SDK;
 using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    public class CertificateBotService : ICertificateBotService
+    internal class CertificateBotService : ICertificateBotService
     {
         private readonly IOptions<CertificateBotOptions> _options;
         private readonly ICertificateService _certificateService;
@@ -112,7 +110,7 @@ namespace RCL.SSL.CertificateBot.Core
 
             try
             {
-                List<IISBindingInformation> bindings = IISBindingsHelper.GetIISBindings(_options?.Value?.IISBindings ?? null);
+                List<IISBindingInformation> bindings = _options?.Value?.IISBindings ?? new List<IISBindingInformation>();
                 List<string> certificateNamesSaved = new List<string>();
                 List<Certificate> certificatesSaved = new List<Certificate>();
                 List<string> certificatesProcessed = new List<string>();
@@ -144,9 +142,9 @@ namespace RCL.SSL.CertificateBot.Core
                                 {
                                     message = $"{message} {certRetrieved.certificateName} is up-to-date on local machine. ";
                                 }
-                            }
 
-                            certificatesProcessed.Add(certificate.certificateName);
+                                certificatesProcessed.Add(certificate.certificateName);
+                            }
                         }
                     }
 
@@ -263,7 +261,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Could not save certificate {certificate.certificateName} to file system {ex.Message}");
             }
 
             return b;
@@ -311,7 +309,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Could not get certificates to renew {ex.Message}");
             }
 
             return certificates;

@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RCL.SSL.CertificateBot.Core
 {
-    public interface IIISService
+    internal interface IIISService
     {
         Site GetIISSite(string siteName);
 
