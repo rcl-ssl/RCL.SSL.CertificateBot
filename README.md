@@ -4,9 +4,9 @@ A Linux Daemon and Windows Service to automate the renewal of SSL/TLS certificat
 
 ## How to use
 
-- Install the Linux Daemon or Windows Service in the server running your websites
+- Install the Linux Daemon or Windows Service in the hosting machine running your websites
 - Register and configure an **AAD Application** in Azure Active Directory for the service to use
-- Every seven (7) days, the service will check for certificates about to expire and renew them automatically and also replace certificates in the server
+- Every seven (7) days, the service will check for certificates about to expire and renew them automatically and also replace certificates in the hosting machine
 
 ## Read the documentation
 
