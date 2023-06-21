@@ -1,6 +1,6 @@
 # RCL SSL CertificateBot
 
-A Linux Daemon and Windows Service to automate the renewal of SSL/TLS certificates created in the RCL Portal. 
+A Linux Daemon and Windows Service to automate the renewal of SSL/TLS certificates created in the RCL SSL Portal. 
 
 ## How to use
 
@@ -30,6 +30,6 @@ This is how you can contribute :
 
 - Respond to PR feedback
 
-## RCL SDK
+## RCL SSL SDK
 
 This application was built with the [RCL SSL SDK](https://docs.rclapp.com/sdk/sdk.html)
