@@ -18,7 +18,7 @@ namespace RCL.SSL.CertificateBot.Windows
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("CertificateBot running at: {time}", DateTime.Now);
+                _logger.LogInformation("CertificateBot Windows Service running at: {time}", DateTime.Now);
 
                 try
                 {

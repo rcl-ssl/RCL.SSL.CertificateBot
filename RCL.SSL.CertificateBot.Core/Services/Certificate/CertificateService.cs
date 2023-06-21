@@ -21,7 +21,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"ERROR from {this.GetType().Name} : {ex.Message}");
             }
 
             return cert;
@@ -37,7 +37,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"ERROR from {this.GetType().Name} : {ex.Message}");
             }
 
             return certs;
@@ -51,7 +51,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"ERROR from {this.GetType().Name} : {ex.Message}");
             }
         }
 
@@ -63,7 +63,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"ERROR from {this.GetType().Name} : {ex.Message}");
             }
         }
     }

@@ -27,6 +27,7 @@ namespace RCL.SSL.CertificateBot.Core
         }
 
         public CertificateBotService(IOptions<CertificateBotOptions> options,
+            IOptions<RCLSDKOptions> sdkOptions,
             ICertificateService certificateService,
             IFileService fileService,
             IIISService iIISService)
@@ -48,6 +49,8 @@ namespace RCL.SSL.CertificateBot.Core
                 if (certificateNames?.Count > 0)
                 {
                     List<Certificate> certificates = await GetIncludedCertificatesAsync(certificateNames);
+
+                    // Save certificates locally if it is new or recently renewed (within last 9 says)
 
                     if (certificates?.Count > 0)
                     {
@@ -71,6 +74,8 @@ namespace RCL.SSL.CertificateBot.Core
                     {
                         message = $"{message} Did not find any certificates to process locally. ";
                     }
+
+                    // Find certificates to renew and schedule their renewal
 
                     List<Certificate> certificatesToRenew = await GetCertificatesToRenewAsync(_options.Value.IncludeCertificates);
 
@@ -109,13 +114,15 @@ namespace RCL.SSL.CertificateBot.Core
 
             try
             {
-                List<IISBindingInformation> bindings = _options.Value.IISBindings;
+                List<IISBindingInformation> bindings = _options?.Value?.IISBindings ?? new List<IISBindingInformation>();
                 List<string> certificateNamesSaved = new List<string>();
                 List<Certificate> certificatesSaved = new List<Certificate>();
                 List<string> certificatesProcessed = new List<string>();
 
                 if (bindings?.Count > 0)
                 {
+                    // Save certificates locally if it is new or recently renewed (within last 9 says)
+
                     foreach (var binding in bindings)
                     {
                         Certificate certificate = new Certificate
@@ -129,29 +136,34 @@ namespace RCL.SSL.CertificateBot.Core
 
                             if (!string.IsNullOrEmpty(certRetrieved?.certificateName))
                             {
-                                bool b = await SaveCertificateAsync(certRetrieved);
+                                if (certRetrieved.renewal.ToLower() == "automatic")
+                                {
+                                    bool b = await SaveCertificateAsync(certRetrieved);
 
-                                if (b == true)
-                                {
-                                    message = $"{message} Successfully saved : {certRetrieved.certificateName} in local machine. ";
-                                    certificateNamesSaved.Add(certRetrieved.certificateName);
-                                    certificatesSaved.Add(certRetrieved);
-                                }
-                                else
-                                {
-                                    message = $"{message} {certRetrieved.certificateName} is up-to-date on local machine. ";
+                                    if (b == true)
+                                    {
+                                        message = $"{message} Successfully saved : {certRetrieved.certificateName} in local machine. ";
+                                        certificateNamesSaved.Add(certRetrieved.certificateName);
+                                        certificatesSaved.Add(certRetrieved);
+                                    }
+                                    else
+                                    {
+                                        message = $"{message} {certRetrieved.certificateName} is up-to-date on local machine. ";
+                                    }
+
+                                    certificatesProcessed.Add(certificate.certificateName);
                                 }
                             }
-
-                            certificatesProcessed.Add(certificate.certificateName);
                         }
                     }
 
-                    foreach(var binding in bindings)
+                    // For the certificates that are saved locally, bind it in IIS
+
+                    foreach (var binding in bindings)
                     {
-                        if(certificateNamesSaved.Contains(binding.certificateName))
+                        if (certificateNamesSaved.Contains(binding.certificateName))
                         {
-                           RemoveIISBinding(binding);
+                            RemoveIISBinding(binding);
 
                             Certificate certificate = certificatesSaved.Where(w => w.certificateName == binding.certificateName).FirstOrDefault();
 
@@ -168,27 +180,36 @@ namespace RCL.SSL.CertificateBot.Core
                     message = $"{message} Did not find any bindngs for IIS. ";
                 }
 
-                List<Certificate> certificatesToRenew = await GetCertificatesToRenewAsync(certificatesProcessed);
+                // Find certificates to renew and schedule their renewal
 
-                if (certificatesToRenew?.Count > 0)
+                if (certificatesProcessed?.Count > 0)
                 {
-                    message = $"{message} Found {certificatesToRenew?.Count} certificate(s) to renew. ";
+                    List<Certificate> certificatesToRenew = await GetCertificatesToRenewAsync(certificatesProcessed);
 
-                    foreach (Certificate cert in certificatesToRenew)
+                    if (certificatesToRenew?.Count > 0)
                     {
-                        await _certificateService.RenewCertificateAsync(cert);
+                        message = $"{message} Found {certificatesToRenew?.Count} certificate(s) to renew. ";
 
-                        message = $"{message} Scheduled {cert.certificateName} for renewal. ";
+                        foreach (Certificate cert in certificatesToRenew)
+                        {
+                            await _certificateService.RenewCertificateAsync(cert);
+
+                            message = $"{message} Scheduled {cert.certificateName} for renewal. ";
+                        }
+                    }
+                    else
+                    {
+                        message = $"{message} Did not find any certificates to renew. ";
                     }
                 }
                 else
                 {
-                    message = $"{message} Did not find any certificates to renew. ";
+                    message = $"{message} Did not process any certificates. ";
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"{message} {ex.Message}");
+                throw new Exception($"{message} ERROR: {ex.Message}");
             }
 
             return message;
@@ -196,10 +217,10 @@ namespace RCL.SSL.CertificateBot.Core
 
         private async Task<List<Certificate>> GetIncludedCertificatesAsync(List<string> certificateNames)
         {
-            List<Certificate> certificates = new List<Certificate>();
-
             try
             {
+                List<Certificate> certificates = new List<Certificate>();
+
                 if (certificateNames?.Count > 0)
                 {
                     foreach (string certificateName in certificateNames)
@@ -220,13 +241,13 @@ namespace RCL.SSL.CertificateBot.Core
                         }
                     }
                 }
+
+                return certificates;
             }
             catch (Exception ex)
             {
                 throw new Exception($"Could not get Included Certificates. {ex.Message}");
             }
-
-            return certificates;
         }
 
         private async Task<bool> SaveCertificateAsync(Certificate certificate)
@@ -253,7 +274,7 @@ namespace RCL.SSL.CertificateBot.Core
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Could not save certificate {certificate.certificateName} to file system {ex.Message}");
             }
 
             return b;
@@ -279,10 +300,10 @@ namespace RCL.SSL.CertificateBot.Core
 
         private async Task<List<Certificate>> GetCertificatesToRenewAsync(List<string> certNames)
         {
-            List<Certificate> certificates = new List<Certificate>();
-
             try
             {
+                List<Certificate> certificates = new List<Certificate>();
+
                 List<Certificate> certsToRenew = await _certificateService.GetCertificatesToRenewAsync();
 
                 if (certsToRenew?.Count > 0)
@@ -298,13 +319,13 @@ namespace RCL.SSL.CertificateBot.Core
                         }
                     }
                 }
+
+                return certificates;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Could not get certificates to renew {ex.Message}");
             }
-
-            return certificates;
         }
 
         private void RemoveIISBinding(IISBindingInformation binding)

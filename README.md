@@ -1,12 +1,12 @@
 # RCL SSL CertificateBot
 
-A Linux Daemon and Windows Service to automate the renewal of SSL/TLS certificates created in the RCL Portal. 
+A Linux Daemon and Windows Service to automate the renewal of SSL/TLS certificates created in the RCL SSL Portal. 
 
 ## How to use
 
-- Install the Linux Daemon or Windows Service in the server running your websites
+- Install the Linux Daemon or Windows Service in the hosting machine running your websites
 - Register and configure an **AAD Application** in Azure Active Directory for the service to use
-- Every seven (7) days, the service will check for certificates about to expire and renew them automatically and also replace certificates in the server
+- Every seven (7) days, the service will check for certificates about to expire and renew them automatically and also replace certificates in the hosting machine
 
 ## Read the documentation
 
@@ -30,6 +30,6 @@ This is how you can contribute :
 
 - Respond to PR feedback
 
-## RCL SDK
+## RCL SSL SDK
 
 This application was built with the [RCL SSL SDK](https://docs.rclapp.com/sdk/sdk.html)
